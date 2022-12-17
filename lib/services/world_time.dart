@@ -9,32 +9,45 @@ class WorldTime {
   late String time; // the time in that location
   late bool isDaytime; // true or false if daytime or not
 
+  static const int MAX_RETRY_COUNT = 50;
+
   WorldTime({required this.location, required this.flag, required this.url});
 
   Future getTime() async {
-    try {
-      // make the request
-      var uri = Uri.https('worldtimeapi.org', 'api/timezone/$url');
-      var response = await http.get(uri);
+    int retry_count = 0;
+    var client = http.Client();
+    while (true) {
+      try {
+        // make the request
+        var uri = Uri.https('worldtimeapi.org', 'api/timezone/$url');
+        var response = await client.get(uri);
 
-      Map data = jsonDecode(response.body);
+        Map data = jsonDecode(response.body);
 
-      // get properties from data
-      String datetime = data['datetime'];
-      String offset = data['utc_offset'].substring(1, 3);
+        // get properties from data
+        String datetime = data['datetime'];
+        String offset = data['utc_offset'].substring(1, 3);
 
-      // create DateTime object
-      DateTime now = DateTime.parse(datetime);
-      now = now.add(Duration(hours: int.parse(offset)));
+        // create DateTime object
+        DateTime now = DateTime.parse(datetime);
+        now = now.add(Duration(hours: int.parse(offset)));
 
-      // set the time property
-      isDaytime = now.hour > 6 && now.hour < 20 ? true : false;
-      time = DateFormat.jm().format(now);
-    } catch (e) {
-      print('caught error: $e');
-      time = 'could not get time data';
-      isDaytime = false;
+        // set the time property
+        isDaytime = now.hour > 6 && now.hour < 20 ? true : false;
+        time = DateFormat.jm().format(now);
+        break;
+      } catch (e) {
+        if (retry_count >= MAX_RETRY_COUNT) {
+          print('caught error: $e');
+          time = 'could not get time data';
+          isDaytime = false;
+          break;
+        } else {
+          retry_count++;
+        }
+      }
     }
+    client.close();
   }
 }
 
