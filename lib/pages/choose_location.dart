@@ -23,6 +23,9 @@ class _ChooseLocationState extends State<ChooseLocation> {
   void updateTime(int index) async {
     WorldTime instance = locations[index];
     await instance.getTime();
+    if (!mounted) {
+      return;
+    }
     Navigator.pop(context, {
       'location': instance.location,
       'flag': instance.flag,
@@ -33,12 +36,11 @@ class _ChooseLocationState extends State<ChooseLocation> {
 
   @override
   Widget build(BuildContext context) {
-    print('build function ran');
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
         backgroundColor: Colors.blue[900],
-        title: Text('Choose a Location'),
+        title: const Text('Choose a Location'),
         centerTitle: true,
         elevation: 0.0,
       ),

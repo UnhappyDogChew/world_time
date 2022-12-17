@@ -16,6 +16,10 @@ class _LoadingState extends State<Loading> {
     WorldTime instance =
         WorldTime(location: 'Seoul', flag: 'korea.png', url: 'Asia/Seoul');
     await instance.getTime();
+
+    if (!mounted) {
+      return;
+    }
     Navigator.of(context).pushReplacementNamed('/home', arguments: {
       'location': instance.location,
       'time': instance.time,
@@ -41,8 +45,8 @@ class _LoadingState extends State<Loading> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.blue[900],
-      body: Center(
-        child: const SpinKitFadingCube(
+      body: const Center(
+        child: SpinKitFadingCube(
           color: Colors.white,
           size: 50.0,
         ),

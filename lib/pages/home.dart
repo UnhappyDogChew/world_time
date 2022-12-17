@@ -47,13 +47,13 @@ class _HomeState extends State<Home> {
                       };
                     });
                   },
-                  icon: Icon(Icons.edit_location),
-                  label: Text('Edit Location'),
+                  icon: const Icon(Icons.edit_location),
+                  label: const Text('Edit Location'),
                   style: ButtonStyle(
                     foregroundColor: MaterialStatePropertyAll(Colors.grey[100]),
                   ),
                 ),
-                SizedBox(height: 20.0),
+                const SizedBox(height: 20.0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -67,7 +67,7 @@ class _HomeState extends State<Home> {
                     ),
                   ],
                 ),
-                SizedBox(height: 20.0),
+                const SizedBox(height: 20.0),
                 Text(
                   data['time'],
                   style: TextStyle(
